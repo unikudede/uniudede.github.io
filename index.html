@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Link Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('293066111_709150750154365_8527517282627645578_n.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        #loginMessage {
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="login-container">
+        <h1>Login dengan NIM</h1>
+        <form id="loginForm">
+            <div class="mb-3">
+                <input type="text" id="nim" name="nim" class="form-control" placeholder="Masukkan NIM Anda" required>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+        <p id="loginMessage" class="text-danger"></p>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const nim = document.getElementById('nim').value;
+
+            fetch(`https://script.google.com/macros/s/AKfycbwKMVstfK0Hy_b5T-NrTYKpBozNNHtFnLwpz-9fBN8fGlE5GR0UJD1yAXGTD5I8w6Zc/exec?action=login&nim=${nim}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        setCookie("username", nim, 30);
+                        setCookie("nm", data.nama, 30);
+                        window.location.href = 'bimbingan.html';
+                    } else {
+                        document.getElementById('loginMessage').textContent = 'Login gagal. NIM tidak ditemukan.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('loginMessage').textContent = 'Terjadi kesalahan. Silakan coba lagi.';
+                });
+        });
+    </script>
+</body>
+
+</html>
